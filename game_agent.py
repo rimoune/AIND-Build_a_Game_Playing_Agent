@@ -4,20 +4,6 @@ and include the results in your report.
 """
 import random
 
-#import logging
-##logger = logging.getLogger(__name__)
-##logger.setLevel(logging.DEBUG)
-#fh = logging.FileHandler('solution.log')
-#fh.setLevel(logging.DEBUG)
-#ch = logging.StreamHandler()
-#ch.setLevel(logging.DEBUG)
-#formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-#fh.setFormatter(formatter)
-#ch.setFormatter(formatter)
-##logger.addHandler(fh)
-##logger.addHandler(ch)
-
-
 class SearchTimeout(Exception):
     """Subclass base exception for code clarity. """
     pass
@@ -52,7 +38,7 @@ def custom_score(game, player):
 
     if game.is_winner(player):
         return float("inf")
-    #w, h = game.width / 2., game.height / 2.
+
     own_y,own_x=game.get_player_location(player)
     opponent_y, opponent_x = game.get_player_location(game.get_opponent(player))
 
@@ -175,12 +161,6 @@ class MinimaxPlayer(IsolationPlayer):
     minimax to return a good move before the search time limit expires.
     """
 
-    #def __init__(self, search_depth, score_fn, timeout=10.):
-
-    #    IsolationPlayer.__init__(self,search_depth, score_fn, timeout=10. )
-
-
-
     def get_move(self, game, time_left):
         """Search for the best move from the available legal moves and return a
         result before the time limit expires.
@@ -222,8 +202,7 @@ class MinimaxPlayer(IsolationPlayer):
             return self.minimax(game, self.search_depth -1) #RIMA togli sto -1
 
         except SearchTimeout:
-            ##logger.info('####*Get_move - Time Out, Do Something!!!!!!')
-            #return best_move
+
             moves=game.get_legal_moves()
             return moves[0]   # Handle any actions required after timeout as needed
 
@@ -233,20 +212,17 @@ class MinimaxPlayer(IsolationPlayer):
     def min_play(self, game, depth):
 
         if self.time_left() < self.TIMER_THRESHOLD:
-            ##logger("****Min Play: Time over my not so friend****")
-            #.info("Min Play, Time Left: %s. Timer Threshold: %s", self.time_left(),self.TIMER_THRESHOLD )
-            #return self.score(game, self)
+
             raise SearchTimeout()
         if (not game.get_legal_moves()) or depth==0:
-            ###logger.info("**Min Play, Game Over? %s or reached depth 0? %s", game.is_game_over(), depth)
-            ##logger.info("***Min Play, Score: %s", self.score(game,self))
+
             return self.score(game, self)
         moves = game.get_legal_moves()
-        ##logger.info("**Min Playing, at level %s. Legal Moves: %s", depth, moves)
+
         best_score = float('inf')
         for move in moves:
             game_cloned = game.forecast_move(move)
-            #print(game_cloned.to_string())
+
             score = self.max_play(game_cloned, (depth-1))
             if score < best_score:
                 best_move = move
@@ -257,16 +233,13 @@ class MinimaxPlayer(IsolationPlayer):
     def max_play(self, game, depth):
 
         if self.time_left() < self.TIMER_THRESHOLD:
-            #logger.info("Max Play, Time Left: %s. Timer Threshold: %s", self.time_left(),self.TIMER_THRESHOLD )
-            #return self.score(game, self)
-            #return self.score(game, self)
+
             raise SearchTimeout()
         if (not game.get_legal_moves()) or depth==0:
-            ##logger.info("**Max Play, Game Over? %s or reached depth 0? %s", game.is_game_over(), depth)
-            #logger.info("***Max Play, Score: %s", self.score(game,self))
+
             return self.score(game, self)
         moves = game.get_legal_moves()
-        #logger.info("Max Playing, at level %s. Legal Moves: %s", depth, moves)
+
         best_score = float('-inf')
         for move in moves:
             game_cloned = game.forecast_move(move)
@@ -322,9 +295,7 @@ class MinimaxPlayer(IsolationPlayer):
 
         # TODO: finish this function!
         moves=game.get_legal_moves()
-        ##logger.info("moves: %s", moves)
 
-        #best_move=moves[0]
         best_move=(-1,-1)
         best_score=float('-inf')
 
@@ -332,12 +303,10 @@ class MinimaxPlayer(IsolationPlayer):
             if self.time_left() < self.TIMER_THRESHOLD:
                 return best_move
 
-            #logger.info("***Minimax***Considering move: %s" , move)
             game_cloned=game.forecast_move(move)
-            ##print(game_cloned.to_string())
 
             score=self.min_play(game_cloned, (depth -1))
-            #logger.info("***Minimax***Score would be: %s", score)
+
             if score > best_score:
                 best_move=move
                 best_score=score
@@ -352,10 +321,6 @@ class AlphaBetaPlayer(IsolationPlayer):
     search with alpha-beta pruning. You must finish and test this player to
     make sure it returns a good move before the search time limit expires.
     """
-    #def __init__(self, search_depth, score_fn, timeout=10.):
-        #IsolationPlayer.__init__(self,search_depth, score_fn, timeout=10. )
-
-
 
     def get_move(self, game, time_left):
         """Search for the best move from the available legal moves and return a
@@ -403,8 +368,7 @@ class AlphaBetaPlayer(IsolationPlayer):
                     if self.time_left() < self.TIMER_THRESHOLD:
                         raise SearchTimeout()
                     best_move= self.alphabeta(game, depth)
-                    #if best_move !=(-1,-1):
-                    #    break
+
 
         except SearchTimeout:
             ##logger.info('####*Get_move - Time Out, Do Something!!!!!!')
@@ -421,14 +385,13 @@ class AlphaBetaPlayer(IsolationPlayer):
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
         if (not game.get_legal_moves()) or depth==0:
-            #logger.info("Evaluating node")
+
             return self.score(game, self)
         moves = game.get_legal_moves()
         best_score = float('inf')
         for move in moves:
             game_cloned = game.forecast_move(move)
-            #print(game_cloned.to_string())
-            #logger.info("Min considering move: %s", move)
+
             score = self.max_play_alphabeta(game_cloned, (depth-1), alpha, beta)
 
             if score < best_score:
@@ -436,10 +399,10 @@ class AlphaBetaPlayer(IsolationPlayer):
             if score < beta:
                 beta=score
             if alpha>=beta:
-            #    logger.info("!!!!!!!!!Min, Pruning: %s?",move)
+
                 break
 
-            #logger.info("Min Alpha: %s, Beta: %s", alpha, beta)
+
         return best_score
 
 
@@ -452,9 +415,9 @@ class AlphaBetaPlayer(IsolationPlayer):
         moves = game.get_legal_moves()
         best_score = float('-inf')
         for move in moves:
-            #logger.info("!!!!!!!!!!!!Max considering move: %s", move)
+
             game_cloned = game.forecast_move(move)
-            #print(game_cloned.to_string())
+
             score = self.min_play_alphabeta(game_cloned, (depth -1), alpha,beta)
 
             if score > best_score:
@@ -462,10 +425,10 @@ class AlphaBetaPlayer(IsolationPlayer):
             if score > alpha:
                 alpha=score
             if alpha>=beta:
-            #    logger.info("Max, Pruning: %s?",move)
+
                 break
 
-            #logger.info("Max Alpha: %s, Beta: %s", alpha, beta)
+
         return best_score
 
 
@@ -519,9 +482,7 @@ class AlphaBetaPlayer(IsolationPlayer):
 
         # TODO: finish this function!
         moves=game.get_legal_moves()
-        ##logger.info("moves: %s", moves)
 
-        #best_move=moves[0]
         best_move=(-1,-1)
         best_score=float('-inf')
 
@@ -529,22 +490,20 @@ class AlphaBetaPlayer(IsolationPlayer):
             if self.time_left() < self.TIMER_THRESHOLD:
                 return best_move
 
-            #logger.info("***Minimax***Considering move: %s" , move)
+
             game_cloned=game.forecast_move(move)
-            ##print(game_cloned.to_string())
 
             score=self.min_play_alphabeta(game_cloned, (depth -1),alpha,beta)
-            #logger.info("***Minimax***Score would be: %s", score)
+
             if score > best_score:
                 best_move=move
                 best_score=score
-            
+
 
             if score > alpha:
                 alpha=score
-            #logger.info("Top Level, score of move: %s",score)
-            #logger.info("Top Level Alpha: %s, Beta: %s", alpha, beta)
+
             if alpha>=beta:
-                #logger.info("Top Level, Pruning: %s?",move)
+
                 break
         return best_move
